@@ -3,7 +3,9 @@
  */
 
 #define KEY_ESCAPE 0x76
-#define KEY_DELETE 0x66
+#define KEY_DELETE 0x71
+#define KEY_BACKSP 0x66
+#define KEY_SCRLCK 0x7E
 
 //Especiales, requieren E0
 #define KEY_RIGHT   0x74
@@ -79,7 +81,7 @@
 #define ROWS 8
 #define COLS 5
 
-// mapa normal ZX 
+// mapa ZX Spectrum
 const uint8_t mapZX[ROWS][COLS] = {
   {KEY_5,          KEY_4,          KEY_3,          KEY_2,          KEY_1}, 
   {KEY_T,          KEY_R,          KEY_E,          KEY_W,          KEY_Q}, 
@@ -93,15 +95,16 @@ const uint8_t mapZX[ROWS][COLS] = {
 
 // mapa shift
 const uint8_t mapShift[ROWS][COLS] = {
+  {KEY_LEFT,       0,              0,              KEY_CAPS,       0}, 
   {0,              0,              0,              0,              0}, 
-  {0,              0,              0,              0,              0}, 
+  {0,              0,              0,              0,              0},
+  {KEY_DOWN,       KEY_UP,         KEY_RIGHT,      0,              KEY_BACKSP},
   {0,              0,              0,              0,              0},
   {0,              0,              0,              0,              0},
   {0,              0,              0,              0,              0},
-  {0,              0,              0,              0,              0},
-  {0,              0,              0,              0,              0},
-  {0,              0,              0,              0,              0},
+  {0,              0,              0,              0,              KEY_ESCAPE},
 };
+
 //mapa symbol
 const uint8_t mapSymbol[ROWS][COLS] = {
   {0,              0,              0,              0,              0}, 
@@ -113,4 +116,3 @@ const uint8_t mapSymbol[ROWS][COLS] = {
   {0,              0,              0,              0,              0},
   {0,              0,              0,              0,              0},
 };
-
