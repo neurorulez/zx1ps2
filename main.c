@@ -306,7 +306,7 @@ void pressExtm(uint8_t shiftd, uint8_t symbold)
  sendPS2(key_mod2);
 }
 
-void pressFKey(unsigned char key, uint8_t preCtrl, uint8_t preAlt, uint8_t preShift)
+void pressFKey(unsigned char key, uint8_t preShift, uint8_t preCtrl, uint8_t preAlt)
 {
   if(preCtrl)  sendPS2(KEY_LCTRL);
   if(preAlt)   sendPS2(KEY_LALT);
