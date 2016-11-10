@@ -75,8 +75,22 @@
 
 #define KEY_CAPS    0x58
 
-#define KEY_TLD     0x0E
 #define KEY_TAB     0x0D
+
+#define KEY_TLD     0x0E  //Izxda del 1
+#define KEY_MENOS	0x4E
+#define KEY_IGUAL	0x55
+#define KEY_BKSLASH 0x5D
+#define KEY_ACORCHE 0x54
+#define KEY_CCORCHE 0x5B
+#define KEY_PTOCOMA 0x4C
+#define KEY_COMILLA 0x52
+#define KEY_SLASH   0x4A
+#define KEY_PUNTO   0x49
+#define KEY_COMA    0x41
+
+#define KEY_ASTERIS 0x7B
+#define KEY_MAS     0x79
 
 #define ROWS 8
 #define COLS 5
@@ -93,9 +107,9 @@ const uint8_t mapZX[ROWS][COLS] = {
   {KEY_B,          KEY_N,          KEY_M,          0,              KEY_SPACE}
 };
 
-// mapa shift
+// mapa shift para teclas directas del PLUS o especiales en gomas. (Cursores, Mayusculas, Backsp, Escape)
 const uint8_t mapShift[ROWS][COLS] = {
-  {KEY_LEFT,       0,              0,              KEY_CAPS,       0}, 
+  {KEY_LEFT,       0,              0,              KEY_CAPS,       KEY_TAB}, 
   {0,              0,              0,              0,              0}, 
   {0,              0,              0,              0,              0},
   {KEY_DOWN,       KEY_UP,         KEY_RIGHT,      0,              KEY_BACKSP},
@@ -105,14 +119,25 @@ const uint8_t mapShift[ROWS][COLS] = {
   {0,              0,              0,              0,              KEY_ESCAPE},
 };
 
-//mapa symbol
-const uint8_t mapSymbol[ROWS][COLS] = {
+//mapa symbol de teclas directas (Faltan G,F,S,A)
+const uint8_t mapSymbolA[ROWS][COLS] = {
+  {0,              0,              0,              0,              0},
+  {0,              KEY_SLASH,      0,              0,              0}, 
+  {0,              0,              KEY_BKSLASH,    0,              0},
+  {0,              KEY_COMILLA,    0,              0,              0}, 
+  {KEY_CCORCHE,    KEY_ACORCHE,    0,              KEY_PTOCOMA,    0},
   {0,              0,              0,              0,              0}, 
-  {0,              0,              0,              0,              0}, 
+  {0,              KEY_MENOS,      KEY_MAS,        KEY_IGUAL,      0},
+  {KEY_ASTERIS,    KEY_COMA,       KEY_PUNTO,      0,              0}
+};
+//mapa symbol de teclas con necesidad de pulsar Shift de PC Faltan G,F,S,A)
+const uint8_t mapSymbolB[ROWS][COLS] = {
+  {KEY_5,          KEY_4,          KEY_3,          KEY_COMILLA,    KEY_1}, 
+  {KEY_SLASH,      0,              0,              0,              0}, 
+  {KEY_CCORCHE,    KEY_ACORCHE,    0,              0,              0},
+  {KEY_6,          0,              KEY_8,          KEY_9,          KEY_MENOS}, 
+  {0,              0,              0,              0,              KEY_2},
+  {KEY_7,          KEY_COMILLA,    KEY_3,          KEY_PTOCOMA,    0}, 
   {0,              0,              0,              0,              0},
-  {0,              0,              0,              0,              0},
-  {0,              0,              0,              0,              0},
-  {0,              0,              0,              0,              0},
-  {0,              0,              0,              0,              0},
-  {0,              0,              0,              0,              0},
+  {0,              0,              0,              0,              0}
 };
