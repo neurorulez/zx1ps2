@@ -424,7 +424,7 @@ if(!preKey && !preMODO) //Si no se ha pulsado una tecla de Funcion... No se ha e
 {
   for (r=0;r<ROWS;r++)
   {
-    //activar fila
+    //activar row/fila
     pinSet(pinsR[r],bcdR[r],_OUT);
     pinPut(pinsR[r], bcdR[r], LO);
     _delay_us(5);
@@ -438,16 +438,15 @@ if(!preKey && !preMODO) //Si no se ha pulsado una tecla de Funcion... No se ha e
 	     pressKey(r, c, shiftd, symbold);      
 	   } else releaseKey(r, c, shiftd, symbold);
     	} else releaseKey(r, c, shiftd, symbold);
-   }
-    //desact. fila
+   }//Fin de Escaneo de las Columnas para el Row/Fila indicado
+    //desact. row/fila
     pinSet(pinsR[r],bcdR[r],_IN);
-  }
- //fin escaneo de filas
+  } //fin escaneo de Rows/Filas
 
   pinPut(pinsR[SHIFT_ROW], bcdR[SHIFT_ROW], LO);
   pinPut(pinsR[SYMBOL_ROW], bcdR[SYMBOL_ROW], LO);
 
-}//Fin del escaneo de Filas
+}//Fin del escaneo de la matriz
  
  _delay_ms(100);
 
