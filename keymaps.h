@@ -77,17 +77,17 @@
 
 #define KEY_TAB     0x0D
 
-#define KEY_TLD     0x0E  //Izxda del 1
-#define KEY_MENOS	0x4E
-#define KEY_IGUAL	0x55
-#define KEY_BKSLASH 0x5D
-#define KEY_ACORCHE 0x54
-#define KEY_CCORCHE 0x5B
-#define KEY_PTOCOMA 0x4C
-#define KEY_COMILLA 0x52
-#define KEY_SLASH   0x4A
-#define KEY_PUNTO   0x49
-#define KEY_COMA    0x41
+#define KEY_TLD     0x0E //Izxda del 1
+#define KEY_MENOS	0x4E //Drcha del 0
+#define KEY_IGUAL	0x55 //Izda de Backspace
+#define KEY_ACORCHE 0x54 //Drcha de la P
+#define KEY_CCORCHE 0x5B //Siguiente a la de la Drcha de la P
+#define KEY_BKSLASH 0x5D //Izda del Enter (Puede estar en la fila de la P o de la L
+#define KEY_PTOCOMA 0x4C //La Ñ
+#define KEY_COMILLA 0x52 //Derecha de la Ñ
+#define KEY_COMA    0x41 //Decha de la M
+#define KEY_PUNTO   0x49 //Siguiente del de la Derecha de la M
+#define KEY_SLASH   0x4A //Izda del Shift Derecho
 
 #define KEY_ASTERIS 0x7B
 #define KEY_MAS     0x79
@@ -121,23 +121,23 @@ const uint8_t mapShift[ROWS][COLS] = {
 
 //mapa symbol de teclas directas (Faltan G,F,S,A)
 const uint8_t mapSymbolA[ROWS][COLS] = {
-  {0,              0,              0,              0,              0},
-  {0,              KEY_SLASH,      0,              0,              0}, 
-  {0,              0,              KEY_BKSLASH,    0,              0},
-  {0,              KEY_COMILLA,    0,              0,              0}, 
-  {KEY_CCORCHE,    KEY_ACORCHE,    0,              KEY_PTOCOMA,    0},
-  {0,              0,              0,              0,              0}, 
-  {0,              KEY_MENOS,      KEY_MAS,        KEY_IGUAL,      0},
-  {KEY_ASTERIS,    KEY_COMA,       KEY_PUNTO,      0,              0}
+  {0,              0,              0,              0,              0},    //5-1 OK
+  {0,              0,              0,              0,              0},    //T-Q OK
+  {0,              0,              KEY_BKSLASH,    0,              0},    //G-A OK
+  {0,              KEY_COMILLA,    0,              0,              0},    //6-0 OK
+  {KEY_ACORCHE,    KEY_CCORCHE,    0,              KEY_PTOCOMA,    0},    //Y-P OK
+  {KEY_SLASH,      0,              KEY_TLD,        0,              0},    //V-Z OK (Menos la LIBRA, lo cambiamos por TLD)
+  {0,              KEY_MENOS,      0,              KEY_IGUAL,      0},    //H-L OK
+  {0,              KEY_COMA,       KEY_PUNTO,      0,              0}     //B-M OK
 };
 //mapa symbol de teclas con necesidad de pulsar Shift de PC Faltan G,F,S,A)
 const uint8_t mapSymbolB[ROWS][COLS] = {
-  {KEY_5,          KEY_4,          KEY_3,          KEY_COMILLA,    KEY_1}, 
-  {KEY_SLASH,      0,              0,              0,              0}, 
-  {KEY_CCORCHE,    KEY_ACORCHE,    0,              0,              0},
-  {KEY_6,          0,              KEY_8,          KEY_9,          KEY_MENOS}, 
-  {0,              0,              0,              0,              KEY_2},
-  {KEY_7,          KEY_COMILLA,    KEY_3,          KEY_PTOCOMA,    0}, 
-  {0,              0,              0,              0,              0},
-  {0,              0,              0,              0,              0}
+  {KEY_5,          KEY_4,          KEY_3,          KEY_2,          KEY_1},       //5-1 OK
+  {KEY_PUNTO,      KEY_COMA,       0,              0,              0},           //T-Q OK
+  {KEY_CCORCHE,    KEY_ACORCHE,    0,              KEY_BKSLASH,    KEY_TLD},     //G-A OK
+  {KEY_7,          0,              KEY_9,          KEY_0,          KEY_MENOS},   //6-0 OK
+  {0,              0,              0,              0,              KEY_COMILLA}, //Y-P OK
+  {0,              KEY_SLASH,      0,              KEY_PTOCOMA,    0},           //V-Z OK (Menos la LIBRA)
+  {KEY_6,          0,              KEY_IGUAL,      0,              0},           //H-L OK
+  {KEY_8,          0,              0,              0,              0}            //B-M OK
 };
