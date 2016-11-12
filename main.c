@@ -248,7 +248,7 @@ void sendCode(unsigned char key, uint8_t shiftd, uint8_t symbold, uint8_t keyzx)
 //secuencia  
    if (shiftd  && !antcs && keyzx) {sendPS2(key_mod1); antcs=1;} //Si el modo es ZX envia la tecla PS2 para Caps Shift
    if (symbold && !antss && keyzx) {sendPS2(key_mod2); antss=1;} //Si el modo es ZX envia la tecla PS2 para Symbol Shift
-   if (symbold && !keyzx && shiftd) {sendPS2(KEY_LSHIFT);} //Si esta en modo PC y hemos mandado la marca de SHIFT necesario para el simbolo, lo activamos.
+   if (symbold && !antcs && !keyzx && shiftd) {sendPS2(KEY_LSHIFT); antcs=1;} //Si esta en modo PC y hemos mandado la marca de SHIFT necesario para el simbolo, lo activamos.
 
    if (key)
    {
@@ -256,7 +256,7 @@ void sendCode(unsigned char key, uint8_t shiftd, uint8_t symbold, uint8_t keyzx)
     antkey[key]=1;
    } 
 
-   if (symbold && !keyzx && shiftd) {sendPS2(0xF0);sendPS2(KEY_LSHIFT);shiftd=0;} //Si esta en modo PC y hemos mandado la marca de SHIFT necesario para el simbolo, lo desactivamos y quitamos la marca.
+   //if (symbold && !keyzx && shiftd) {sendPS2(0xF0);sendPS2(KEY_LSHIFT);shiftd=0;} //Si esta en modo PC y hemos mandado la marca de SHIFT necesario para el simbolo, lo desactivamos y quitamos la marca.
 //fin secuencia
 }
 
@@ -279,11 +279,12 @@ void releaseKey(uint8_t r, uint8_t c, uint8_t shiftd, uint8_t symbold)
 {  
 uint8_t key = mapZX[r][c];
 
-if(shiftd  && modoPC && mapShift[r][c]) key = mapShift[r][c];
-if(symbold && modoPC) 
+
+if(modoPC) 
  { 
-  if (mapSymbolB[r][c]) key = mapSymbolB[r][c]; //En la Tabla B de simbolos hay que simular SHIFT (No hace falta simular para soltar) 
-  else                  key = mapSymbolA[r][c]; //En la Tabla A de simbolos no hay q simular SHIFT (No hace falta simular para soltar)
+  if (antkey[mapShift[r][c]])   key = mapShift[r][c];
+  if (antkey[mapSymbolB[r][c]]) key = mapSymbolB[r][c]; //En la Tabla B de simbolos hay que simular SHIFT (No hace falta simular para soltar) 
+  if (antkey[mapSymbolA[r][c]]) key = mapSymbolA[r][c]; //En la Tabla A de simbolos no hay q simular SHIFT (No hace falta simular para soltar)
  }
 
 if (key && antkey[key]) //Entra aqui si en el pase actuañ no esta pulsada, comprueba si antes si, y manda soltarla por ps2.
@@ -293,6 +294,8 @@ if (key && antkey[key]) //Entra aqui si en el pase actuañ no esta pulsada, compr
   antkey[key]=0;
  } 
 
+if (modoPC && antcs) {sendPS2(0xF0);sendPS2(KEY_LSHIFT);antcs=0;} //Quita el Shift para tecla emulada
+ 
 if (!shiftd && antcs) //Si no esta pulsado Caps Shift y antes lo estaba, manda soltarlo por PS2
  {
   sendPS2(0xF0);
@@ -322,15 +325,17 @@ void pressExtm(uint8_t shiftd, uint8_t symbold)
 
 void pressFKey(unsigned char key, uint8_t preShift, uint8_t preCtrl, uint8_t preAlt)
 {
+  if(preShift) sendPS2(KEY_LSHIFT);
   if(preCtrl)  sendPS2(KEY_LCTRL);
   if(preAlt)   sendPS2(KEY_LALT);
-  if(preShift) sendPS2(KEY_LSHIFT);
+  _delay_us(5);
   sendPS2(key);
   _delay_us(5);
   sendPS2(0xF0); sendPS2(key);
+  _delay_us(5);
+  if(preShift) {sendPS2(0xF0); sendPS2(KEY_LSHIFT); preShift=0;}  
   if(preCtrl)  {sendPS2(0xF0); sendPS2(KEY_LCTRL);  preCtrl=0;}
   if(preAlt)   {sendPS2(0xF0); sendPS2(KEY_LALT);   preAlt=0;}
-  if(preShift) {sendPS2(0xF0); sendPS2(KEY_LSHIFT); preShift=0;}  
 }
 
 //preparamos matriz teclado.
