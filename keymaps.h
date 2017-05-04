@@ -2,20 +2,32 @@
  * Definiciones teclado con scancodes ps/2
  */
 
+ //Modificadores (Para probar si funcionan... seria haciendo la asignacion asi: " #define KEY_RCTRL   0x14 | EXT "
+#define EXT        0x100
+#define MD1        0x200
+#define MD2        0x400
+#define MD3        0x800
+
+ 
 #define KEY_ESCAPE 0x76
 #define KEY_DELETE 0x71
 #define KEY_BACKSP 0x66
 #define KEY_SCRLCK 0x7E
+
+#define KEY_LCTRL   0x14
+#define KEY_LALT    0x11
 
 //Especiales, requieren E0
 #define KEY_RIGHT   0x74
 #define KEY_LEFT    0x6B
 #define KEY_DOWN    0x72
 #define KEY_UP      0x75
-#define KEY_LCTRL   0x14
-#define KEY_LALT    0x11
 #define KEY_RCTRL   0x14
 #define KEY_RALT    0x11
+#define KEY_LWIN    0x1F
+#define KEY_RWIN    0x27
+#define KEY_APPS    0x2F
+//Fin Especiales
 
 #define KEY_A       0x1C
 #define KEY_B       0x32
@@ -102,42 +114,7 @@ const uint8_t mapZX[ROWS][COLS] = {
   {KEY_G,          KEY_F,          KEY_D,          KEY_S,          KEY_A},
   {KEY_6,          KEY_7,          KEY_8,          KEY_9,          KEY_0}, 
   {KEY_Y,          KEY_U,          KEY_I,          KEY_O,          KEY_P},
-  {KEY_V,          KEY_C,          KEY_X,          KEY_Z,          0	}, 
+  {KEY_V,          KEY_C,          KEY_X,          KEY_Z,          0}, 
   {KEY_H,          KEY_J,          KEY_K,          KEY_L,          KEY_ENTER},
   {KEY_B,          KEY_N,          KEY_M,          0,              KEY_SPACE}
-};
-
-// mapa shift para teclas directas del PLUS o especiales en gomas. (Cursores, Mayusculas, Backsp, Escape)
-const uint8_t mapShift[ROWS][COLS] = {
-  {KEY_LEFT,       0,              0,              KEY_CAPS,       KEY_TAB}, 
-  {0,              0,              0,              0,              0}, 
-  {0,              0,              0,              0,              0},
-  {KEY_DOWN,       KEY_UP,         KEY_RIGHT,      0,              KEY_BACKSP},
-  {0,              0,              0,              0,              0},
-  {0,              0,              0,              0,              0},
-  {0,              0,              0,              0,              0},
-  {0,              0,              0,              0,              KEY_ESCAPE},
-};
-
-//mapa symbol de teclas directas (Faltan G,F,S,A)
-const uint8_t mapSymbolA[ROWS][COLS] = {
-  {0,              0,              0,              0,              0},    //5-1 OK
-  {0,              0,              0,              0,              0},    //T-Q OK
-  {0,              0,              KEY_BKSLASH,    0,              0},    //G-A OK
-  {0,              KEY_COMILLA,    0,              0,              0},    //6-0 OK
-  {KEY_ACORCHE,    KEY_CCORCHE,    0,              KEY_PTOCOMA,    0},    //Y-P OK
-  {KEY_SLASH,      0,              KEY_TLD,        0,              0},    //V-Z OK (Menos la LIBRA, lo cambiamos por TLD)
-  {0,              KEY_MENOS,      0,              KEY_IGUAL,      0},    //H-L OK
-  {0,              KEY_COMA,       KEY_PUNTO,      0,              0}     //B-M OK
-};
-//mapa symbol de teclas con necesidad de pulsar Shift de PC Faltan G,F,S,A)
-const uint8_t mapSymbolB[ROWS][COLS] = {
-  {KEY_5,          KEY_4,          KEY_3,          KEY_2,          KEY_1},       //5-1 OK
-  {KEY_PUNTO,      KEY_COMA,       0,              0,              0},           //T-Q OK
-  {KEY_CCORCHE,    KEY_ACORCHE,    0,              KEY_BKSLASH,    KEY_TLD},     //G-A OK
-  {KEY_7,          0,              KEY_9,          KEY_0,          KEY_MENOS},   //6-0 OK
-  {0,              0,              0,              0,              KEY_COMILLA}, //Y-P OK
-  {0,              KEY_SLASH,      0,              KEY_PTOCOMA,    0},           //V-Z OK (Menos la LIBRA)
-  {KEY_6,          0,              KEY_IGUAL,      0,              0},           //H-L OK
-  {KEY_8,          0,              0,              0,              0}            //B-M OK
 };
