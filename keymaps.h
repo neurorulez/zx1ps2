@@ -2,13 +2,6 @@
  * Definiciones teclado con scancodes ps/2
  */
 
- //Modificadores (Para probar si funcionan... seria haciendo la asignacion asi: " #define KEY_RCTRL   0x14 | EXT "
-#define EXT        0x100
-#define MD1        0x200
-#define MD2        0x400
-#define MD3        0x800
-
- 
 #define KEY_ESCAPE 0x76
 #define KEY_DELETE 0x71
 #define KEY_BACKSP 0x66
