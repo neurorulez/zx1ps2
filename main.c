@@ -33,18 +33,25 @@
 //Definicion de pines y puertos en arrays
 
 ///////////Pro Mini
-//{PC1, PC0, PB4, PB3, PB2};
+//{PB2=10, PB3=11, PB4=12, PC0=A0, PC1=A1};
 uint8_t pinsC[COLS] =  {2, 3, 4, 0, 1};
 uint8_t bcdC[COLS] =   {2, 2, 2, 3, 3};
 
-//{PD2, PD3, PD4, PD5, PD6, PD7, PB0, PB1};
+//{PD2=2, PD3=3, PD4=4, PD5=5, PD6=6, PD7=7, PB0=8, PB1=9};
 uint8_t pinsR[ROWS] =  {2, 3, 4, 5, 6, 7, 0, 1};
 uint8_t bcdR[ROWS] =   {4, 4, 4, 4, 4, 4, 2, 2};
 
+//Swiches {PC2=A2 / PC3=A3}; 
+uint8_t pinsSW[NUMSW] =  {2, 3};
+uint8_t bcdSW[NUMSW] =   {3, 3};
+
 //Teclas Pulsadas en el ultimo pase
 uint8_t matriz[ROWS][COLS] = { {0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0},{0,0,0,0,0}}; //0=Sin pulsar, 1=Marcada para Soltar, 2=Recien Pulsado, 3=Mantenido
+uint8_t botones[NUMSW] = {0,0};
+
 unsigned char espera = 0;
 unsigned char fnpulsada = 0;
+unsigned char fnpulsando = 0;
 
 uint8_t modoPC=0; //Modo teclado 0=ZX / 1=PC (con mapeo de tabla caps shift y symbol shift (sin implementar aun)
 
@@ -291,6 +298,12 @@ void matrixInit()
   LED_CONFIG;
   LED_OFF;
 
+  for (c=0;c<NUMSW;c++)
+  { 
+    pinSet(pinsSW[c], bcdSW[c],_IN);
+    pinPut(pinsSW[c], bcdSW[c], HI);
+  }
+
   for (c=0;c<COLS;c++)
   { 
     pinSet(pinsC[c],bcdC[c],_IN);
@@ -307,8 +320,8 @@ void pulsafn(unsigned char row, unsigned char col, unsigned char mod_E0, unsigne
   if(matriz[SYMBOL_SHIFT_ROW][SYMBOL_SHIFT_COL]==1 || matriz[SYMBOL_SHIFT_ROW][SYMBOL_SHIFT_COL]==3) {if(!mod_E0) sendPS2(0xE0); sendPS2(0xF0); sendPS2(SYMBOL_SHIFT); matriz[SYMBOL_SHIFT_ROW][SYMBOL_SHIFT_COL]=0; espera++;}
 
   if(espera) {_delay_us(5); espera=0;}
-  if(shift)  {if(mod_E0) {sendPS2(KEY_RSHIFT); espera++;} else{sendPS2(KEY_LSHIFT); espera++;}}//El Shift derecho no necesita E0
-  if(ctrl)   {if(mod_E0) {sendPS2(0xE0); sendPS2(KEY_RCTRL);  espera++;} else{sendPS2(KEY_LCTRL);  espera++;}}//Se manda E0 para el control derecho
+  if(shift)  {sendPS2(KEY_RSHIFT); espera++;} //El Shift derecho no necesita E0
+  if(ctrl)   {sendPS2(0xE0); sendPS2(KEY_RCTRL);  espera++;} //Se manda E0 para el control derecho (que vale para ambos casos)
   if(alt)    {sendPS2(KEY_LALT);   espera++;} //Usamos el Alt izdo siempre
   if(espera) {_delay_us(5); espera=0;}
   if(key_E0) {sendPS2(0xE0);} //La tecla requiere modo E0 del PS2
@@ -318,18 +331,44 @@ void pulsafn(unsigned char row, unsigned char col, unsigned char mod_E0, unsigne
   sendPS2(0xF0); 
   sendPS2(key);  
   matriz[row][col]=0;
-  if(shift) {if(mod_E0) {sendPS2(0xF0); sendPS2(KEY_RSHIFT);} else {sendPS2(0xF0); sendPS2(KEY_LSHIFT);}}
-  if(ctrl)  {if(mod_E0) {sendPS2(0xE0); sendPS2(0xF0); sendPS2(KEY_RCTRL);} else {sendPS2(0xF0); sendPS2(KEY_LCTRL);}}
+  if(shift) {sendPS2(0xF0); sendPS2(KEY_RSHIFT);}
+  if(ctrl)  {sendPS2(0xE0); sendPS2(0xF0); sendPS2(KEY_RCTRL);}
   if(alt)   {sendPS2(0xF0); sendPS2(KEY_LALT);}
   _delay_us(5);
   fnpulsada=1;  
+  fnpulsando=1;
 }
 
 void matrixScan()
 {
-  uint8_t r, c;
+  uint8_t r, c, b;
 
-  for (r=0;r<ROWS;r++)
+  fnpulsada=0; //Se pone a 0 la pulsacion de una tecla de funcion
+
+  for (b=0;b<NUMSW;b++)
+  {
+   if(pinStat(pinsSW[b], bcdSW[b]))  //Controla los Botones Externos del Arduino
+   {
+    _delay_us(10); //debounce
+     if(pinStat(pinsSW[b], bcdSW[b])) 
+	  {
+  		if(b==0) //Soft Reset en prueba 
+		 {
+	      sendPS2(KEY_A);_delay_us(5); 
+		  sendPS2(0xF0); sendPS2(KEY_A); _delay_us(5); 
+          fnpulsada=1;
+   	     }
+   		if(b==1) //NMI en Prueba
+		 {
+	      sendPS2(KEY_B);_delay_us(5); 
+		  sendPS2(0xF0); sendPS2(KEY_B); _delay_us(5); 
+          fnpulsada=1;
+		  }
+	  } 
+   } 
+  }
+
+  if (!fnpulsada) {for (r=0;r<ROWS;r++)
   {
     //activar row/fila
     pinSet(pinsR[r],bcdR[r],_OUT);
@@ -349,20 +388,16 @@ void matrixScan()
    }//Fin de Escaneo de las Columnas para el Row/Fila indicado
     //desact. row/fila
     pinSet(pinsR[r],bcdR[r],_IN);
-  } //fin escaneo de Rows/Filas
+  }} //fin escaneo de Rows/Filas
   
-  fnpulsada=0; //Se pone a 0 la pulsacion de una tecla de funcion
   //Comprobacion de Teclas especiales al tener pulsado Caps Shift y Symbol Shift
-  if(matriz[CAPS_SHIFT_ROW][CAPS_SHIFT_COL]>1 && matriz[SYMBOL_SHIFT_ROW][SYMBOL_SHIFT_COL]>1)
+  if (!fnpulsada) {if(matriz[CAPS_SHIFT_ROW][CAPS_SHIFT_COL]>1 && matriz[SYMBOL_SHIFT_ROW][SYMBOL_SHIFT_COL]>1)
   {
 //funcion(row,col,key,key_e0,shift,control,alt) Prueba con pocas teclas
-//   if(matriz[F1_F5_ROW][F5_COL]>1) pulsafn(F1_F5_ROW,F5_COL,mod_ctrl,KEY_F5,0,0,1,1);      // CapsShift+SymbolShift+5 NMI
-//   if(matriz[F6_F0_ROW][F6_COL]>1) pulsafn(F6_F0_ROW,F6_COL,mod_ctrl,KEY_SCRLCK,0,0,0,0);  // CapsShift+SymbolShift+6 RGB/VGA Swich
-//   if(matriz[F6_F0_ROW][F7_COL]>1) pulsafn(F6_F0_ROW,F7_COL,mod_ctrl,KEY_DELETE,0,0,1,1);  // CapsShift+SymbolShift+7 Shoft Reset
-//   if(matriz[F6_F0_ROW][F8_COL]>1) pulsafn(F6_F0_ROW,F8_COL,mod_ctrl,KEY_BACKSP,0,0,1,1);  // CapsShift+SymbolShift+8 Hard Reset
-
 // Intento de Mapear muchas teclas especiales
 // /*
+  if(!fnpulsando) //Para evitar la pulsacion multiple de una tecla especial, solo 1 por cada toque.
+   {
    //Tecla Escape
    if(matriz[SPACE_ROW][SPACE_COL]>1) pulsafn(SPACE_ROW,SPACE_COL,mod_ctrl,KEY_ESCAPE,0,0,0,0); //Escape
   //Teclas F1..F10 (Fila Primera del Spectrum, desde Arriba)
@@ -405,9 +440,11 @@ void matrixScan()
    if(matriz[B_M_ROW][B_COL]>1) pulsafn(B_M_ROW,B_COL,mod_ctrl,KEY_CCORCHE,0,0,0,0); // *
    if(matriz[B_M_ROW][N_COL]>1) pulsafn(B_M_ROW,N_COL,mod_ctrl,KEY_COMA,0,0,0,0);    // , 
    if(matriz[B_M_ROW][M_COL]>1) pulsafn(B_M_ROW,M_COL,mod_ctrl,KEY_PUNTO,0,0,0,0);   // .
+   }
 //Fin del Intento de Mapear Muchas Teclas especiales
 //*/
-  }//Fin de Comprobacion de Teclas Especiales
+  }else fnpulsando=0;}//Fin de Comprobacion de Teclas Especiales
+  
   if(!fnpulsada) //Si no se ha pulsado ningun tecla de funcion
   {  
    //Enviar la pulsacion de Caps Shift y/o Symbol Shift si no se trata de una funcion especial (Necesita de E0 cuando son las teclas LWIN y RWIN y no lo necesita cuando son LCTRL y LSHIFT)
