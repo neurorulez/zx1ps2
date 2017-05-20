@@ -93,6 +93,7 @@
 #define KEY_COMA    0x41 //Decha de la M
 #define KEY_PUNTO   0x49 //Siguiente del de la Derecha de la M
 #define KEY_SLASH   0x4A //Izda del Shift Derecho
+#define KEY_GREAT   0x56
 
 #define KEY_ASTERIS 0x7B
 #define KEY_MAS     0x79
