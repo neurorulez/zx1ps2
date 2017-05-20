@@ -99,6 +99,7 @@
 
 #define ROWS 8
 #define COLS 5
+#define NUMSW 2
 
 // mapa ZX Spectrum
 const uint8_t mapZX[ROWS][COLS] = {
