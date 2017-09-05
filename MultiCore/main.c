@@ -394,8 +394,8 @@ void imprimecore(const uint8_t nomcore[]) //Imprime el nombre del core
 {
 int n;
 char pausa=100;
-// _delay_ms(pausa);sendPS2(KEY_SPACE);_delay_ms(pausa); sendPS2(0xF0);sendPS2(KEY_SPACE);
-// _delay_ms(pausa);sendPS2(KEY_PUNTO);_delay_ms(pausa); sendPS2(0xF0);sendPS2(KEY_PUNTO);
+_delay_ms(pausa);sendPS2(KEY_SPACE);_delay_ms(pausa); sendPS2(0xF0);sendPS2(KEY_SPACE);
+_delay_ms(pausa);sendPS2(KEY_PUNTO);_delay_ms(pausa); sendPS2(0xF0);sendPS2(KEY_PUNTO);
  for (n=1;n<nomcore[0]+1;n++)
  {
   _delay_ms(pausa);
@@ -626,8 +626,8 @@ void matrixScan()
 	 //if(matriz[Y_P_ROW][U_COL]>1) {if(modo<MAXKB)modo=cambiarmodo(modo+1); else modo=cambiarmodo(0);}    //Cambio de Modo de Teclado entre 0=ZX, y el resto
      if(matriz[Y_P_ROW][U_COL]>1) 
 	  {cambiomodo=1; fnpulsada=1; soltarteclas=1; LED_ON;
-	  _delay_ms(100);sendPS2(KEY_SPACE);_delay_ms(100); sendPS2(0xF0);sendPS2(KEY_SPACE);
-      _delay_ms(100);sendPS2(KEY_PUNTO);_delay_ms(100); sendPS2(0xF0);sendPS2(KEY_PUNTO);	 
+	  //_delay_ms(100);sendPS2(KEY_SPACE);_delay_ms(100); sendPS2(0xF0);sendPS2(KEY_SPACE);
+      //_delay_ms(100);sendPS2(KEY_PUNTO);_delay_ms(100); sendPS2(0xF0);sendPS2(KEY_PUNTO);	 
       } //Activa el cambio de modo lo que dejara en bucle hasta que se pulse una tecla. El led se enciende.
 	 if(matriz[N1_N5_ROW][N1_COL]>1) pulsafn(N1_N5_ROW,N1_COL,KEY_F1,0,0,0,0,5);  //F1
      if(matriz[N1_N5_ROW][N2_COL]>1) pulsafn(N1_N5_ROW,N2_COL,KEY_F2,0,0,0,0,5);  //F2
